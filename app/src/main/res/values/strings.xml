@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">قاموس</string>
+    <string name="arabic">عربي</string>
+    <string name="english">انكليزي</string>
+    <string name="search">بحث</string>
+    <string name="liked_words">الكلمات المعجب بها</string>
+
+</resources>

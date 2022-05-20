@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="character"
+            type="Character" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="8dp"
+        android:layout_margin="4dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="@{String.valueOf(character)}"
+            android:textColor="@color/black"
+            android:textSize="42sp"
+            android:textStyle="bold"
+            tools:text="A" />
+    </com.google.android.material.card.MaterialCardView>
+
+</layout>
