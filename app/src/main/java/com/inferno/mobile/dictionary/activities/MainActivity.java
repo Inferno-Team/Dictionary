@@ -14,8 +14,10 @@ import android.view.View;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.inferno.mobile.dictionary.R;
+import com.inferno.mobile.dictionary.adapters.AdapterItemClick;
 import com.inferno.mobile.dictionary.adapters.CharactersAdapter;
 import com.inferno.mobile.dictionary.adapters.GridSpacingItemDecoration;
 import com.inferno.mobile.dictionary.databinding.CharactersLayoutBinding;
@@ -28,6 +30,7 @@ import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -35,7 +38,6 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     CharactersLayoutBinding binding;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-
 
     public static class JsonLoaderThread extends Thread {
         private final CharactersLayoutBinding binding;
@@ -105,7 +106,9 @@ public class MainActivity extends AppCompatActivity {
                 binding.characters.setVisibility(View.VISIBLE);
                 ArrayList<Character> characters = new ArrayList<>(wordsMap.keySet());
                 Collections.sort(characters);
+
                 charactersAdapter = new CharactersAdapter(context, characters);
+
                 charactersAdapter.setOnClickListener((item, pos) -> {
                     Intent intent = new Intent(context, WordActivity.class);
                     intent.putExtra("character", item);

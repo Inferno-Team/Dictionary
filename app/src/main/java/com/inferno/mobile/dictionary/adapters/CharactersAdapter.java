@@ -24,11 +24,16 @@ public class CharactersAdapter extends RecyclerView.Adapter<CharactersAdapter.Ch
         this.characters = characters;
     }
 
+
+    public void setOnClickListener(AdapterItemClick<Character> onClickListener) {
+        this.onClickListener = onClickListener;
+    }
+
     @NonNull
     @Override
     public CharacterHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new CharacterHolder(LayoutInflater.from(context)
-                .inflate(R.layout.character_item, parent, false));
+        return new CharacterHolder(LayoutInflater.from(context).
+                inflate(R.layout.character_item, parent, false));
     }
 
     @Override
@@ -36,8 +41,8 @@ public class CharactersAdapter extends RecyclerView.Adapter<CharactersAdapter.Ch
         holder.binding.setCharacter(characters.get(position));
         holder.itemView.setOnClickListener(v -> {
             if (onClickListener != null)
-                onClickListener.onClick(characters.get(holder.getAdapterPosition()),
-                        holder.getAdapterPosition());
+                onClickListener.onClick(characters.get(holder.getAdapterPosition())
+                        , holder.getAdapterPosition());
         });
     }
 
@@ -46,14 +51,10 @@ public class CharactersAdapter extends RecyclerView.Adapter<CharactersAdapter.Ch
         return characters.size();
     }
 
-    public void setOnClickListener(AdapterItemClick<Character> onClickListener) {
-        this.onClickListener = onClickListener;
-    }
-
     public static class CharacterHolder extends RecyclerView.ViewHolder {
         CharacterItemBinding binding;
 
-        public CharacterHolder(@NonNull View itemView) {
+        public CharacterHolder(View itemView) {
             super(itemView);
             binding = CharacterItemBinding.bind(itemView);
         }

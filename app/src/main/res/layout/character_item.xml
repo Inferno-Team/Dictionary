@@ -6,6 +6,7 @@
         <variable
             name="character"
             type="Character" />
+
     </data>
 
     <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -28,7 +29,7 @@
             android:textColor="@color/black"
             android:textSize="42sp"
             android:textStyle="bold"
-            tools:text="A" />
+            tools:text="B" />
     </com.google.android.material.card.MaterialCardView>
 
 </layout>
