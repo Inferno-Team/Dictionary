@@ -10,6 +10,7 @@
         android:theme="@style/Theme.Dictionary">
         <activity
             android:name=".activities.MainActivity"
+            android:configChanges="screenSize|orientation"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -17,7 +18,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.WordActivity" android:configChanges="screenSize|orientation" />
+        <activity android:name=".activities.WordActivity"/>
     </application>
 
 </manifest>
