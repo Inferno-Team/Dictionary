@@ -50,22 +50,22 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView characters = findViewById(R.id.characters);
         characters.addItemDecoration(new
                 GridSpacingItemDecoration(3, 50, true));
-        new JsonLoaderThread(progressBar,characters,this).start();
-   /*     binding.searchFab.setOnClickListener(v -> {
+        new JsonLoaderThread(progressBar, characters, this).start();
+        FloatingActionButton searchFab = findViewById(R.id.search_fab);
+        searchFab.setOnClickListener(v -> {
             Intent intent = new Intent(this, WordActivity.class);
             intent.putExtra("character", '-');
             startActivity(intent);
         });
-*/
     }
 
     public static class JsonLoaderThread extends Thread {
-       private final ProgressBar progressBar;
-       private final RecyclerView characters;
+        private final ProgressBar progressBar;
+        private final RecyclerView characters;
         private final Context context;
         static ArrayList<Word> words;
-        private CharactersAdapter charactersAdapter;
         static Map<Character, ArrayList<Word>> wordsMap;
+        private CharactersAdapter charactersAdapter;
 
         public JsonLoaderThread(ProgressBar progressBar, RecyclerView characters,
                                 Context context) {
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                 InputStream is = context.getAssets().open("dictionary.json");
                 BufferedReader reader = new BufferedReader(new InputStreamReader(is));
                 String line;
-                while((line = reader.readLine())!=null){
+                while ((line = reader.readLine()) != null) {
                     json.append(line).append("\n");
                 }
 //                json.append(new String(buffer, StandardCharsets.UTF_8));
@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
         private ArrayList<Word> convertJsonToWords(String json) {
             Gson gson = new Gson();
-            Type type = new TypeToken<List<Word>>(){
+            Type type = new TypeToken<List<Word>>() {
 
             }.getType();
             return gson.fromJson(json, type);
@@ -117,14 +117,7 @@ public class MainActivity extends AppCompatActivity {
                 characters.setVisibility(View.VISIBLE);
                 ArrayList<Character> _characters = new ArrayList<>(wordsMap.keySet());
                 Collections.sort(_characters);
-
                 charactersAdapter = new CharactersAdapter(context, _characters);
-
-                charactersAdapter.setOnClickListener((item, pos) -> {
-                    Intent intent = new Intent(context, WordActivity.class);
-                    intent.putExtra("character", item);
-                    context.startActivity(intent);
-                });
                 characters.setAdapter(charactersAdapter);
                 String msg = "تم اكتشاف " + words.size() + " كلمة";
                 Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();

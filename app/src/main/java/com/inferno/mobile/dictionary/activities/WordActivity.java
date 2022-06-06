@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.inferno.mobile.dictionary.R;
 import com.inferno.mobile.dictionary.adapters.PaginationListener;
@@ -23,20 +24,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WordActivity extends AppCompatActivity {
-    private ActivityMainBinding binding;
+
     private PaginationListener listener;
     private ArrayList<Word> words;
     private WordAdapter adapter;
+    private RecyclerView wordsRecyclerView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        setContentView(R.layout.activity_main);
+        wordsRecyclerView = findViewById(R.id.words);
         char character = getIntent().getCharExtra("character", 'A');
         if (character != '-' && character != '*') {
             words = MainActivity.JsonLoaderThread.wordsMap.get(character);
-
         } else {
             if (character == '-')
                 words = MainActivity.JsonLoaderThread.words;
@@ -68,8 +69,8 @@ public class WordActivity extends AppCompatActivity {
             Log.d("JsonLoaderThread", "setLoadMore: page #" + currentPage);
             loadMore(currentPage);
         });
-        binding.words.addOnScrollListener(listener);
-        binding.words.setAdapter(adapter);
+        wordsRecyclerView.addOnScrollListener(listener);
+        wordsRecyclerView.setAdapter(adapter);
     }
 
     private ArrayList<Word> loadLikedWords() {
@@ -90,9 +91,9 @@ public class WordActivity extends AppCompatActivity {
     void loadMore(int page) {
         listener.setLoading(false);
         int wordCount = listener.getPageItemCount();
-        int startIndex = page * wordCount;
-        int lastIndex = (page + 1) * wordCount;
-        if (lastIndex >= words.size())
+        int startIndex = page * wordCount; // 0 * 15 => 0
+        int lastIndex = (page + 1) * wordCount; // 1 * 15 => 15
+        if (lastIndex >= words.size()) // 100
             lastIndex = words.size() - 1;
         if (words.size() == 0)
             return;
@@ -107,7 +108,7 @@ public class WordActivity extends AppCompatActivity {
 
 
 
-        listener.setLastPage((page + 1) * wordCount >= words.size());
+        listener.setLastPage((page + 1) * wordCount >= words.size()); // 1 * 15 >= 1000
         listener.setCurrentPage(page + 1);
     }
 
@@ -142,11 +143,11 @@ public class WordActivity extends AppCompatActivity {
 
     private void searchWord(String text) {
         if (text.equals("")) {
-            binding.words.setAdapter(adapter);
+            wordsRecyclerView.setAdapter(adapter);
             loadMore(0);
-            binding.words.addOnScrollListener(listener);
+            wordsRecyclerView.addOnScrollListener(listener);
         } else {
-            binding.words.removeOnScrollListener(listener);
+            wordsRecyclerView.removeOnScrollListener(listener);
             ArrayList<Word> searchWords = new ArrayList<>();
 
             for (Word word : words) {
@@ -168,8 +169,7 @@ public class WordActivity extends AppCompatActivity {
                 }
                 searchAdapter.notifyItemChanged(pos);
             });
-            binding.words.swapAdapter(searchAdapter, true);
+            wordsRecyclerView.swapAdapter(searchAdapter, true);
         }
     }
-
 }

@@ -1,75 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp"
+    android:layoutDirection="rtl"
+    android:stretchColumns="1,2,3,4">
 
-<layout>
+    <TableRow>
+        <TextView
+            android:id="@+id/eng"
+            android:layout_width="0dp"
+            android:layout_column="1"
+            android:gravity="end"
+            android:padding="4dp"
+            android:text="@{StringUtils.capitalize(word.eng)}"
+            android:textColor="@color/black"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            tools:text="English" />
 
-    <data>
+        <TextView
+            android:id="@+id/ar"
+            android:layout_width="0dp"
+            android:layout_column="2"
+            android:gravity="start"
+            android:padding="4dp"
+            android:text="@{word.ar}"
+            android:textColor="@color/black"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            tools:text="عربي" />
 
-        <variable
-            name="word"
-            type="com.inferno.mobile.dictionary.models.Word" />
+        <TextView
+            android:layout_column="3"
+            android:gravity="start"
+            android:padding="4dp"
+            android:textColor="@color/black"
+            android:textSize="17sp"
+            android:textStyle="bold" />
 
-        <import type="org.apache.commons.lang3.StringUtils" />
-    </data>
+        <LinearLayout
 
-    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:layoutDirection="rtl"
-        android:stretchColumns="1,2,3,4">
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_column="4"
+            android:orientation="horizontal">
 
-        <TableRow>
-
-            <TextView
-
-                android:id="@+id/eng"
-                android:layout_width="0dp"
-                android:layout_column="1"
-                android:gravity="end"
-                android:padding="4dp"
-                android:text="@{StringUtils.capitalize(word.eng)}"
-                android:textColor="@color/black"
-                android:textSize="17sp"
-                android:textStyle="bold"
-                tools:text="English" />
-
-            <TextView
-                android:id="@+id/ar"
-                android:layout_width="0dp"
-                android:layout_column="2"
-                android:gravity="start"
-                android:padding="4dp"
-                android:text="@{word.ar}"
-                android:textColor="@color/black"
-                android:textSize="17sp"
-                android:textStyle="bold"
-                tools:text="عربي" />
-
-            <TextView
-                android:layout_column="3"
-                android:gravity="start"
-                android:padding="4dp"
-                android:textColor="@color/black"
-                android:textSize="17sp"
-                android:textStyle="bold" />
-
-            <LinearLayout
-
-                android:layout_width="0dp"
-                android:layout_height="32dp"
-                android:layout_column="4"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/like_btn"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    app:srcCompat="@drawable/ic_heart" />
-            </LinearLayout>
-        </TableRow>
-    </TableLayout>
-</layout>
+            <ImageView
+                android:id="@+id/like_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                app:srcCompat="@drawable/ic_heart" />
+        </LinearLayout>
+    </TableRow>
+</TableLayout>
