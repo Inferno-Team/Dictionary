@@ -2,6 +2,7 @@ package com.inferno.mobile.dictionary.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -24,8 +26,10 @@ import com.inferno.mobile.dictionary.databinding.CharactersLayoutBinding;
 import com.inferno.mobile.dictionary.models.Word;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -37,39 +41,51 @@ import java.util.Locale;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
-    CharactersLayoutBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = CharactersLayoutBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-        binding.characters.addItemDecoration(new
+        setContentView(R.layout.characters_layout);
+        ProgressBar progressBar = findViewById(R.id.progressbar);
+        RecyclerView characters = findViewById(R.id.characters);
+        characters.addItemDecoration(new
                 GridSpacingItemDecoration(3, 50, true));
-        new JsonLoaderThread(binding, this).start();
-        binding.searchFab.setOnClickListener(v -> {
+        new JsonLoaderThread(progressBar,characters,this).start();
+   /*     binding.searchFab.setOnClickListener(v -> {
             Intent intent = new Intent(this, WordActivity.class);
             intent.putExtra("character", '-');
             startActivity(intent);
         });
-
+*/
     }
 
     public static class JsonLoaderThread extends Thread {
-        private final CharactersLayoutBinding binding;
+       private final ProgressBar progressBar;
+       private final RecyclerView characters;
         private final Context context;
         static ArrayList<Word> words;
         private CharactersAdapter charactersAdapter;
         static Map<Character, ArrayList<Word>> wordsMap;
 
+        public JsonLoaderThread(ProgressBar progressBar, RecyclerView characters,
+                                Context context) {
+            this.progressBar = progressBar;
+            this.characters = characters;
+            this.context = context;
+            charactersAdapter = new CharactersAdapter(context, new ArrayList<>());
+        }
+
+
         private String getJsonDataFromAsset(Context context) {
             StringBuilder json = new StringBuilder();
             try {
                 InputStream is = context.getAssets().open("dictionary.json");
-                int size = is.available();
-                byte[] buffer = new byte[size];
-                is.read(buffer);
-                is.close();
-                json.append(new String(buffer, StandardCharsets.UTF_8));
+                BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                String line;
+                while((line = reader.readLine())!=null){
+                    json.append(line).append("\n");
+                }
+//                json.append(new String(buffer, StandardCharsets.UTF_8));
             } catch (IOException e) {
                 e.fillInStackTrace();
             }
@@ -78,23 +94,18 @@ public class MainActivity extends AppCompatActivity {
 
         private ArrayList<Word> convertJsonToWords(String json) {
             Gson gson = new Gson();
-            Type type = new TypeToken<List<Word>>() {
+            Type type = new TypeToken<List<Word>>(){
+
             }.getType();
             return gson.fromJson(json, type);
-        }
-
-        private JsonLoaderThread(CharactersLayoutBinding binding, Context context) {
-            this.binding = binding;
-            this.context = context;
-            charactersAdapter = new CharactersAdapter(context, new ArrayList<>());
         }
 
         @Override
         public void run() {
             super.run();
             ((MainActivity) context).runOnUiThread(() -> {
-                binding.progressbar.setVisibility(View.VISIBLE);
-                binding.characters.setVisibility(View.GONE);
+                progressBar.setVisibility(View.VISIBLE);
+                characters.setVisibility(View.GONE);
 
             });
             String json = getJsonDataFromAsset(context);
@@ -102,19 +113,19 @@ public class MainActivity extends AppCompatActivity {
 
             wordsMap = reshapeData();
             ((MainActivity) context).runOnUiThread(() -> {
-                binding.progressbar.setVisibility(View.GONE);
-                binding.characters.setVisibility(View.VISIBLE);
-                ArrayList<Character> characters = new ArrayList<>(wordsMap.keySet());
-                Collections.sort(characters);
+                progressBar.setVisibility(View.GONE);
+                characters.setVisibility(View.VISIBLE);
+                ArrayList<Character> _characters = new ArrayList<>(wordsMap.keySet());
+                Collections.sort(_characters);
 
-                charactersAdapter = new CharactersAdapter(context, characters);
+                charactersAdapter = new CharactersAdapter(context, _characters);
 
                 charactersAdapter.setOnClickListener((item, pos) -> {
                     Intent intent = new Intent(context, WordActivity.class);
                     intent.putExtra("character", item);
                     context.startActivity(intent);
                 });
-                binding.characters.setAdapter(charactersAdapter);
+                characters.setAdapter(charactersAdapter);
                 String msg = "تم اكتشاف " + words.size() + " كلمة";
                 Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
             });
@@ -139,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
                     value = new ArrayList<>();
                     data.put(c, value);
                 }
+
                 value.add(word);
             }
             return data;
